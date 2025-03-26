@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Train Schedule | Panther-Path</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+    <main class="main-content train-schedule-page">
+        <div class="train-schedule-wrapper">
+          <h1>Live MARTA Train Schedule</h1>
+          <div id="schedule-list">Loading train schedule...</div>
+        </div>
+      </main>
+  <script>
+    fetch('/api/schedule')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('schedule-list');
+        container.innerHTML = ''; // clear loading text
+
+        if (!Array.isArray(data) || data.length === 0) {
+          container.textContent = 'No train schedule data available.';
+          return;
+        }
+
+        const table = document.createElement('table');
+        table.classList.add('schedule-table');
+
+        const header = document.createElement('tr');
+        const columns = ['Destination', 'Station', 'Direction', 'Line', 'Waiting Time', 'Event Time', 'Next Arrival'];
+
+        columns.forEach(col => {
+          const th = document.createElement('th');
+          th.textContent = col;
+          header.appendChild(th);
+        });
+
+        table.appendChild(header);
+
+        data.forEach(train => {
+          const row = document.createElement('tr');
+          const cells = [
+            train.destination,
+            train.station,
+            train.direction,
+            train.line,
+            train.waiting_time,
+            train.event_time,
+            train.next_arr
+          ];
+
+          cells.forEach(cell => {
+            const td = document.createElement('td');
+            td.textContent = cell || '—';
+            row.appendChild(td);
+          });
+
+          table.appendChild(row);
+        });
+
+        container.appendChild(table);
+      })
+      .catch(err => {
+        console.error('Error fetching train data:', err);
+        const container = document.getElementById('schedule-list');
+        container.textContent = 'Failed to load schedule.';
+      });
+  </script>
+</body>
+</html>

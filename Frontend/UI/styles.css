@@ -103,24 +103,74 @@ body {
     transform: scale(1.05);
 }
 
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: center;
+  }
+
+  .schedule-table th {
+    background-color: #0A2472;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  .schedule-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
 /* Mobile styles */
 @media (max-width: 768px) {
     .menu-toggle {
         display: block;
     }
-    
+
     .navigation-bar {
         transform: translateX(-100%);
         width: 250px;
         z-index: 999;
     }
-    
+
     .navigation-bar.active {
         transform: translateX(0);
     }
-    
+
     .main-content {
         margin-left: 0;
         width: 100%;
     }
 }
+
+
+.train-schedule-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    width: 100%;
+  }
+
+  .train-schedule-wrapper h1 {
+    font-size: 2rem;
+    color: #0A2472;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  /* Override existing .main-content for this page */
+  .train-schedule-page .main-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    margin-top: 40px;
+    width: 100%;
+  }

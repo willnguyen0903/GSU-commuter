@@ -18,13 +18,13 @@
     <div class="navigation-bar" id="nav-bar">
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="news.asp">Train Schedule</a></li>
+            <li><a href="train-schedule.html">Train Schedule</a></li>
             <li><a href="contact.asp">Route Planning</a></li>
             <li><a href="about.asp">Saved Routes</a></li>
             <li><a href="about.asp">Parking</a></li>
         </ul>
     </div>
-    
+
     <div class="main-content">
         <div class="center-container">
             <img src="./images/logo.png" alt="Panther-Path Logo" class="logo">
@@ -37,11 +37,11 @@
         document.addEventListener('DOMContentLoaded', function() {
         const mobileMenu = document.getElementById('mobile-menu');
         const navBar = document.getElementById('nav-bar');
-        
+
         mobileMenu.addEventListener('click', function() {
             navBar.classList.toggle('active');
         });
-        
+
         // Close menu when clicking on a link (optional)
         const navLinks = document.querySelectorAll('.navigation-bar a');
         navLinks.forEach(link => {
