@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <link rel="icon" type="image/x-icon" href="./images/logo.png">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- Logo -->
+        <a href="index.html">
+            <img src="./images/logo.png" alt="Panther-Path Logo" class="logo">
+        </a>
+
+        <!-- Login Form -->
+        <form class="form" id="loginForm">
+            <label for="username">Username</label>
+            <input type="username" id="username" name="username" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <div class="remember-me">
+                <input type="checkbox" id="remember">
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+
+            <p class="signup-link">Don't have an account? <a href="signup.html">Sign up</a></p>
+        </form>
+    </div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const rememberMe = document.getElementById('remember').checked;
+        // CHANGE THIS FETCH AFTER DEPLOY TO RENDER
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Login successful!");
+
+            //Store the token
+            if (rememberMe) {
+                localStorage.setItem('token', data.token);
+            } else {
+                sessionStorage.setItem('token', data.token);
+            }
+
+            window.location.href = "mainScreen.html";
+        } else {
+            alert(data.message);
+        }
+    });
+</script>
+
+
+</body>
+</html>
