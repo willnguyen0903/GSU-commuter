@@ -40,7 +40,7 @@
             // Send data to the backend
             // CHANGE THIS FETCH AFTER DEPLOY TO RENDER
             try {
-                const response = await fetch('http://localhost:3000/register', {
+                const response = await fetch('https://gsu-commuter.onrender.com/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
