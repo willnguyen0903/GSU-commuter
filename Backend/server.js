@@ -115,7 +115,7 @@ app.post("/register", async (req, res) => {
   try {
       const password_hash = await bcrypt.hash(password, 10);
       const result = await pool.query(
-          "INSERT INTO commuter (username, password_hash) VALUES ($1, $2) RETURNING uid",
+          "INSERT INTO commuter (username, password) VALUES ($1, $2) RETURNING uid",
           [username, password_hash]
       );
       res.status(201).json({ message: "User registered", uid: result.rows[0].uid });
@@ -125,7 +125,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-// User Login (Finds user by `username` and checks `password_hash`)
+// User Login (Finds user by `username` and checks `password`)
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
