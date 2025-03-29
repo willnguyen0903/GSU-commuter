@@ -141,7 +141,7 @@ app.post('/login', async (req, res) => {
       }
 
       const user = result.rows[0];
-      const isValid = await bcrypt.compare(password, user.password_hash);
+      const isValid = await bcrypt.compare(password, user.password);
 
       if (!isValid) {
           return res.status(401).json({ message: "Invalid credentials" });
