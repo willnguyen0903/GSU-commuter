@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parking Lots - PantherPath</title>
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="stylesheet" href="parking.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script defer src="parking.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <img src="logo.png" alt="Logo" class="logo" />
+      <i class="fa-solid fa-house" id="home-btn"></i>
+      <script>
+        document.getElementById("home-btn").addEventListener("click", function(event) {
+          event.preventDefault(); // Stop link from navigating immediately
+          const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+          if (token) {
+            // Redirect to index or mainScreen
+            window.location.href = "mainScreen.html";
+          } else {
+            window.location.href = "index.html";
+          }
+        });
+      </script>
+    </div>
+    <div class="container">
+      <!-- Campus Selection Dropdown -->
+      <div class="campus-selection">
+        <label for="campus-select"><strong>Select Campus:</strong></label>
+        <select id="campus-select" onchange="updateParkingLots()">
+          <option value="atlanta">Atlanta</option>
+          <option value="alpharetta">Alpharetta</option>
+          <option value="clarkston">Clarkston</option>
+          <option value="decatur">Decatur</option>
+          <option value="dunwoody">Dunwoody</option>
+          <option value="newton">Newton</option>
+        </select>
+      </div>
+
+      <!-- Parking Lots List -->
+      <div id="parking-lots" class="lots-container">
+        <!-- Decks will be listed here -->
+      </div>
+
+      <!-- Info Board (Hidden by Default) -->
+      <div id="info-board" class="info-board hidden">
+        <button class="close-btn" onclick="closeInfoBoard()">✖</button>
+        <div class="info-pages">
+          <!-- Page 1: Image -->
+          <div class="info-page active" id="page1">
+            <img id="deck-image" class="deck-image" src="" alt="Parking Lot">
+          </div>
+
+          <!-- Page 2: Details -->
+          <div class="info-page" id="page2">
+            <h2 id="deck-name"></h2>
+            <p><strong>📍 Address:</strong> <a id="deck-address" href="#" target="_blank"></a></p>
+            <p><strong>🕒 Open Hours:</strong> <span id="deck-hours"></span></p>
+            <p><strong>♿ Accessibility :</strong> <span id="accessibility"></span></p>
+          </div>
+        </div>
+
+        <!-- Page Navigation Buttons -->
+         <div class="info-board-btn">
+          <button id="prev-page" onclick="showPage(1)">⬅</button>
+          <button id="next-page" onclick="showPage(2)">➡</button>
+         </div>
+      </div>
+    </div>
+  </body>
+</html>
