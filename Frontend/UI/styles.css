@@ -165,12 +165,20 @@ body {
     text-align: center;
   }
 
-  /* Override existing .main-content for this page */
-  .train-schedule-page .main-content {
+/* Override existing .main-content for this page */
+.train-schedule-page .main-content {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     padding: 20px;
     margin-top: 40px;
     width: 100%;
-  }
+}
+
+#logout-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 32px;
+    display: none;
+}

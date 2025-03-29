@@ -9,11 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="logout-btn">
+        <a href="#" id="logout-btn">
+            <i class="fa-solid fa-arrow-right-from-bracket" id="logout-icon" style="display: none;"></i>
+        </a>    
+    </div>
     <!-- Mobile menu button -->
     <div class="menu-toggle" id="mobile-menu">
         <i class="fas fa-bars"></i>
     </div>
-
+    
     <!-- Navigation bar -->
     <div class="navigation-bar" id="nav-bar">
         <ul>
@@ -28,30 +33,56 @@
     <div class="main-content">
         <div class="center-container">
             <img src="./images/logo.png" alt="Panther-Path Logo" class="logo">
-            <button class="btn" onclick="window.location.href='login.html'">Login</button>
-            <button class="btn" onclick="window.location.href='signup.html'">Sign Up</button>
+            <button class="btn" id="login-btn" onclick="window.location.href='login.html'">Login</button>
+            <button class="btn" id="signup-btn" onclick="window.location.href='signup.html'">Sign Up</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenu = document.getElementById('mobile-menu');
-        const navBar = document.getElementById('nav-bar');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navBar = document.getElementById('nav-bar');
+            const logoutIcon = document.getElementById('logout-icon');
+            const loginBtn = document.getElementById('login-btn');
+            const signupBtn = document.getElementById('signup-btn');
+            
+            // Check if user is logged in (token exists)
+            const token = sessionStorage.getItem('token') || localStorage.getItem('token');
+            
+            if (token) {
+                // User is logged in - show logout and hide login/signup
+                logoutIcon.style.display = 'block';
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+                
+                // Add logout functionality
+                document.getElementById('logout-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    sessionStorage.removeItem('token');
+                    localStorage.removeItem('token');
+                    window.location.href = 'index.html';
+                });
+            } else {
+                // User is not logged in - hide logout and show login/signup
+                logoutIcon.style.display = 'none';
+                loginBtn.style.display = 'block';
+                signupBtn.style.display = 'block';
+            }
 
-        mobileMenu.addEventListener('click', function() {
-            navBar.classList.toggle('active');
-        });
+            mobileMenu.addEventListener('click', function() {
+                navBar.classList.toggle('active');
+            });
 
-        // Close menu when clicking on a link (optional)
-        const navLinks = document.querySelectorAll('.navigation-bar a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    navBar.classList.remove('active');
-                }
+            // Close menu when clicking on a link (optional)
+            const navLinks = document.querySelectorAll('.navigation-bar a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        navBar.classList.remove('active');
+                    }
+                });
             });
         });
-    });
     </script>
 </body>
 </html>
