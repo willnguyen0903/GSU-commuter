@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, "../frontend/UI/train-schedule.html"
 
 // Serve HTML file
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/UI/transitSchedule.html"));
+    res.sendFile(path.join(__dirname, "../frontend/UI/train-schedule.html"));
 });
 
 // --- Function to Fetch from MARTA and Store in DB ---
