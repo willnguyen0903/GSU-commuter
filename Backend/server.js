@@ -21,11 +21,11 @@ const pool = new Pool({
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, "../Frontend/UI/train-schedule.html")));
+app.use(express.static(path.join(__dirname, "../Frontend/UI")));
 
 // Serve HTML file
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../Frontend/UI/train-schedule.html"));
+    res.sendFile(path.join(__dirname, "../Frontend/UI/login.html"));
 });
 
 // --- Function to Fetch from MARTA and Store in DB ---
