@@ -127,9 +127,6 @@
     }
 
     function filterAndDisplayData() {
-      const selectedStation = document.getElementById('station-filter').value;
-      const selectedDestination = document.getElementById('destination-filter').value;
-
       const filteredData = trainData.filter(train => {
         const stationMatch = !selectedStation || train.station === selectedStation;
         const destinationMatch = !selectedDestination || train.destination === selectedDestination;
@@ -142,6 +139,8 @@
 
     function displayData(data) {
       const container = document.getElementById('schedule-list');
+      const selectedStation = document.getElementById('station-filter').value;
+      const selectedDestination = document.getElementById('destination-filter').value;
       container.innerHTML = '';
 
       if (!Array.isArray(data) || data.length === 0) {
