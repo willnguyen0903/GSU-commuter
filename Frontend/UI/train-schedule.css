@@ -238,6 +238,27 @@ body {
   box-shadow: 0 0 0 3px rgba(98, 193, 232, 0.2);
 }
 
+.button-wrapper {
+    align-self: flex-end;
+    margin-bottom: 2px;
+  }
+
+.clear-filters-btn {
+    background-color: #1a237e;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    width: 100%; /* fills the same width as selects */
+  }
+
+  .clear-filters-btn:hover {
+    background-color: #3949ab;       /* lighter blue on hover */
+  }
+
 #schedule-list {
   width: 100%;
   overflow-x: auto;
@@ -484,9 +505,4 @@ body {
     align-items: center;
     gap: 5px;
   }
-}
-
-/* Hide the Clear Filters button */
-.clear-filters-btn {
-  display: none;
 }

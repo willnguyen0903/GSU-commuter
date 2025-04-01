@@ -95,12 +95,18 @@ app.get('/api/schedule', async (req, res) => {
   try {
     // Only fetch recent and relevant data
     const result = await pool.query(`
-      SELECT DISTINCT ON (destination, station) *
+      SELECT DISTINCT ON (destination, station)
+        destination,
+        station,
+        direction,
+        waiting_time,
+        line,
+        TO_CHAR(event_time AT TIME ZONE 'UTC', 'YYYY-MM-DD HH12:MI AM') AS event_time,
+        next_arr
       FROM train_schedule
-      WHERE event_time::timestamp > NOW() - INTERVAL '30 minutes'
       ORDER BY destination, station, event_time DESC
+      LIMIT 100
     `);
-
     res.json(result.rows);
   } catch (err) {
     console.error('Error serving schedule from DB:', err);

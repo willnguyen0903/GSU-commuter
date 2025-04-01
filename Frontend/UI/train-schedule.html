@@ -7,256 +7,170 @@
   <link rel="stylesheet" href="train-schedule.css"/>
 </head>
 <body>
-    <main class="main-content train-schedule-page">
-        <div class="train-schedule-wrapper">
-          <div class="header-section">
-            <a href="index.html" class="back-button">← Back to Home</a>
-            <h1>Live MARTA Train Schedule</h1>
-            <div class="update-info">
-                <div class="update-texts">
-                    <span id="last-updated">Last updated: --:--:--</span>
-                    <span id="next-update"></span>
-                </div>
-              <button id="refresh-button" class="refresh-btn">Refresh Now</button>
-            </div>
-          </div>
+<main class="main-content train-schedule-page">
+  <div class="train-schedule-wrapper">
+    <div class="header-section">
+      <a href="index.html" class="back-button">← Back to Home</a>
+      <h1>Live MARTA Train Schedule</h1>
+      <div class="update-info">
+        <span id="last-updated">Last updated: --:--:--</span>
+        <span id="next-update"></span>
+        <button id="refresh-button" class="refresh-btn">Refresh Now</button>
+      </div>
+    </div>
 
-          <div class="filters-section">
-            <div class="filter-group">
-              <label for="station-filter">Current Station:</label>
-              <select id="station-filter">
-                <option value="">All Stations</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label for="destination-filter">Destination:</label>
-              <select id="destination-filter">
-                <option value="">All Destinations</option>
-              </select>
-            </div>
-            <button id="clear-filters-button" class="clear-filters-btn">Clear Filters</button>
-          </div>
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="filter-group">
+        <label for="station-filter">Current Station:</label>
+        <select id="station-filter">
+          <option value="">All Stations</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="destination-filter">Destination:</label>
+        <select id="destination-filter">
+          <option value="">All Destinations</option>
+        </select>
+      </div>
+      <div class="button-wrapper">
+        <button id="clear-filters-button" class="clear-filters-btn">Clear Filters</button>
+      </div>
+    </div>
 
-          <div id="schedule-list" class="schedule-container">Loading train schedule...</div>
-        </div>
-    </main>
-  <script>
-    let trainData = []; // Store the full dataset
-    let updateTimer;
-    const REFRESH_INTERVAL = 60; // Increased to 60 seconds to reduce API calls
-    const MIN_REFRESH_INTERVAL = 30; // Minimum time between manual refreshes
+    <div id="schedule-list" class="schedule-container">Loading train schedule...</div>
+  </div>
+</main>
 
-    let lastRefreshTime = 0;
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let trainData = [];
+  let lastRefreshTime = 0;
 
-    function parseWaitingTime(waitingTime) {
-      if (!waitingTime) return Infinity;
-      if (waitingTime === 'Arriving') return 0;
-      const minutes = parseInt(waitingTime);
-      return isNaN(minutes) ? Infinity : minutes;
-    }
+  function updateFilters(data) {
+    const stations = [...new Set(data.map(train => train.station))].filter(Boolean).sort();
+    const destinations = [...new Set(data.map(train => train.destination))].filter(Boolean).sort();
 
-    function showLoadingState() {
-      const container = document.getElementById('schedule-list');
+    const stationFilter = document.getElementById('station-filter');
+    const destinationFilter = document.getElementById('destination-filter');
+
+    stationFilter.innerHTML = '<option value="">All Stations</option>';
+    destinationFilter.innerHTML = '<option value="">All Destinations</option>';
+
+    stations.forEach(station => {
+      const option = document.createElement('option');
+      option.value = station;
+      option.textContent = station;
+      stationFilter.appendChild(option);
+    });
+
+    destinations.forEach(destination => {
+      const option = document.createElement('option');
+      option.value = destination;
+      option.textContent = destination;
+      destinationFilter.appendChild(option);
+    });
+  }
+
+  function filterAndDisplayData() {
+    const selectedStation = document.getElementById('station-filter').value;
+    const selectedDestination = document.getElementById('destination-filter').value;
+
+    const filteredData = trainData.filter(train => {
+      const stationMatch = !selectedStation || train.station === selectedStation;
+      const destinationMatch = !selectedDestination || train.destination === selectedDestination;
+      return stationMatch && destinationMatch;
+    });
+
+    displayData(filteredData);
+  }
+
+  function displayData(data) {
+    const container = document.getElementById('schedule-list');
+    container.innerHTML = '';
+    data = data.slice(0, 50);
+
+    if (!Array.isArray(data) || data.length === 0) {
       container.innerHTML = `
-        <div class="loading-state">
-          <div class="spinner"></div>
-          <p>Updating train schedule...</p>
+        <div class="no-data-state">
+          <p>No train data found.</p>
         </div>
       `;
+      return;
     }
 
-    function showErrorState(error) {
-      const container = document.getElementById('schedule-list');
-      container.innerHTML = `
-        <div class="error-state">
-          <p>Unable to load train schedule.</p>
-          <p class="error-details">${error}</p>
-          <button onclick="fetchTrainData()" class="retry-btn">Try Again</button>
-        </div>
-      `;
-    }
+    const table = document.createElement('table');
+    table.classList.add('schedule-table');
 
-    function updateLastRefreshTime() {
-      const now = new Date();
-      document.getElementById('last-updated').textContent =
-        `Last updated: ${now.toLocaleTimeString()}`;
-    }
-
-    function startUpdateCountdown() {
-      let secondsLeft = REFRESH_INTERVAL;
-
-      if (updateTimer) {
-        clearInterval(updateTimer);
-      }
-
-      updateTimer = setInterval(() => {
-        secondsLeft--;
-        document.getElementById('next-update').textContent =
-          `Next update in ${secondsLeft}s`;
-
-        if (secondsLeft <= 0) {
-          fetchTrainData();
-        }
-      }, 1000);
-    }
-
-    function updateFilters(data) {
-      const stations = [...new Set(data.map(train => train.station))].filter(Boolean).sort();
-      const destinations = [...new Set(data.map(train => train.destination))].filter(Boolean).sort();
-
-      const stationFilter = document.getElementById('station-filter');
-      const destinationFilter = document.getElementById('destination-filter');
-
-      // Clear existing options
-      stationFilter.innerHTML = '<option value="">All Stations</option>';
-      destinationFilter.innerHTML = '<option value="">All Destinations</option>';
-
-      stations.forEach(station => {
-        const option = document.createElement('option');
-        option.value = station;
-        option.textContent = station;
-        stationFilter.appendChild(option);
-      });
-
-      destinations.forEach(destination => {
-        const option = document.createElement('option');
-        option.value = destination;
-        option.textContent = destination;
-        destinationFilter.appendChild(option);
-      });
-    }
-
-    function filterAndDisplayData() {
-      const filteredData = trainData.filter(train => {
-        const stationMatch = !selectedStation || train.station === selectedStation;
-        const destinationMatch = !selectedDestination || train.destination === selectedDestination;
-        return stationMatch && destinationMatch;
-      });
-
-      // Display the filtered data
-      displayData(filteredData);
-    }
-
-    function displayData(data) {
-      const container = document.getElementById('schedule-list');
-      const selectedStation = document.getElementById('station-filter').value;
-      const selectedDestination = document.getElementById('destination-filter').value;
-      container.innerHTML = '';
-
-      if (!Array.isArray(data) || data.length === 0) {
-        container.innerHTML = `
-          <div class="no-data-state">
-            <p>No trains found matching your criteria.</p>
-            ${selectedStation || selectedDestination ?
-              '<p>Try adjusting your filters or <a href="#" onclick="resetFilters()">reset all filters</a>.</p>' :
-              ''}
-          </div>
-        `;
-        return;
-      }
-
-      const table = document.createElement('table');
-      table.classList.add('schedule-table');
-
-      const header = document.createElement('tr');
-      const columns = ['Destination', 'Current Station', 'Direction', 'Line', 'Waiting Time', 'Event Time', 'Next Arrival'];
-
-      columns.forEach(col => {
+    const header = document.createElement('tr');
+    ['Current Sation', 'Destination', 'Direction', 'Line', 'Waiting Time', 'Updated At', 'Next Arrival']
+      .forEach(text => {
         const th = document.createElement('th');
-        th.textContent = col;
+        th.textContent = text;
         header.appendChild(th);
       });
+    table.appendChild(header);
 
-      table.appendChild(header);
+    data.forEach(train => {
+      const row = document.createElement('tr');
+      const cells = [
+        train.station,
+        train.destination,
+        train.direction,
+        train.line,
+        train.waiting_time,
+        train.event_time,
+        train.next_arr
+];
 
-      data.forEach(train => {
-        const row = document.createElement('tr');
-        const waitingTime = parseWaitingTime(train.waiting_time);
 
-        // Add classes for arriving/approaching trains
-        if (waitingTime === 0) {
-          row.classList.add('arriving');
-        } else if (waitingTime <= 5) {
-          row.classList.add('approaching');
-        }
-
-        const cells = [
-          train.destination,
-          train.station,
-          train.direction,
-          train.line,
-          train.waiting_time,
-          train.event_time,
-          train.next_arr
-        ];
-
-        cells.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = cell || '—';
-          row.appendChild(td);
-        });
-
-        table.appendChild(row);
+      cells.forEach(val => {
+        const td = document.createElement('td');
+        td.textContent = val || '—';
+        row.appendChild(td);
       });
 
-      container.appendChild(table);
-    }
+      table.appendChild(row);
+    });
 
-    function resetFilters() {
-      document.getElementById('station-filter').value = '';
-      document.getElementById('destination-filter').value = '';
+    container.appendChild(table);
+  }
+
+  async function fetchTrainData() {
+    const container = document.getElementById('schedule-list');
+    container.innerHTML = `<p>🔄 Loading...</p>`;
+
+    try {
+      const response = await fetch('/api/schedule');
+      if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+
+      const data = await response.json();
+      console.log("✅ Train data:", data);
+
+      trainData = data;
+      updateFilters(trainData);
       filterAndDisplayData();
+
+      document.getElementById('last-updated').textContent =
+        "Last updated: " + new Date().toLocaleTimeString();
+    } catch (err) {
+      console.error("🚨 Error fetching train data:", err);
+      container.innerHTML = `<p>❌ Failed to load train schedule. Try refreshing.</p>`;
     }
+  }
 
-    async function fetchTrainData(isManualRefresh = false) {
-      // Prevent too frequent manual refreshes
-      if (isManualRefresh) {
-        const timeSinceLastRefresh = Date.now() - lastRefreshTime;
-        if (timeSinceLastRefresh < MIN_REFRESH_INTERVAL * 1000) {
-          const secondsToWait = Math.ceil((MIN_REFRESH_INTERVAL * 1000 - timeSinceLastRefresh) / 1000);
-          alert(`Please wait ${secondsToWait} seconds before refreshing again.`);
-          return;
-        }
-      }
+  // Event listeners
+  document.getElementById('refresh-button').addEventListener('click', fetchTrainData);
+  document.getElementById('station-filter').addEventListener('change', filterAndDisplayData);
+  document.getElementById('destination-filter').addEventListener('change', filterAndDisplayData);
+  document.getElementById('clear-filters-button').addEventListener('click', () => {
+    document.getElementById('station-filter').value = '';
+    document.getElementById('destination-filter').value = '';
+    filterAndDisplayData();
+  });
 
-      showLoadingState();
-
-      try {
-        const response = await fetch('https://gsu-commuter.onrender.com/api/schedule');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        trainData = data;
-        lastRefreshTime = Date.now();
-
-        updateFilters(data);
-        filterAndDisplayData();
-        updateLastRefreshTime();
-        startUpdateCountdown();
-      } catch (err) {
-        console.error('Error fetching train data:', err);
-        showErrorState(err.message);
-      }
-    }
-
-    // Set up event listeners
-    document.getElementById('station-filter').addEventListener('change', filterAndDisplayData);
-    document.getElementById('destination-filter').addEventListener('change', filterAndDisplayData);
-    document.getElementById('refresh-button').addEventListener('click', () => fetchTrainData(true));
-
-    // Function to clear filters
-    function clearFilters() {
-      document.getElementById('station-filter').value = '';
-      document.getElementById('destination-filter').value = '';
-      filterAndDisplayData(); // Refresh the displayed data
-    }
-
-    // Set up event listener for the clear filters button
-    document.getElementById('clear-filters-button').addEventListener('click', clearFilters);
-
-    // Initial fetch
-    fetchTrainData();
-  </script>
+  fetchTrainData();
+});
+</script>
 </body>
 </html>
