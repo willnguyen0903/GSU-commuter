@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Route Planning - PantherPath</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script defer src="route.js"></script>
+  </head>
+  <body class="route-page">
+    <div class="main-content">
+      <div class="center-container">
+        <a href="index.html" class="back-button">← Back to Home</a>
+        <div class="route-form">
+          <h2>Plan Your Route</h2>
+          <div class="form-group">
+            <label for="start-location">Start Location:</label>
+            <select id="start-location" onchange="updateEndLocations(); handleLocationSelect('start')">
+              <option value="">Select Start Location</option>
+              <option value="current">Current Location</option>
+              <option value="Aderhold Learning Center">Aderhold Learning Center</option>
+              <option value="Andrew Young School">Andrew Young School</option>
+              <option value="Arts & Humanities Building">Arts & Humanities Building</option>
+              <option value="College of Law">College of Law</option>
+              <option value="Library North">Library North</option>
+              <option value="Library South">Library South</option>
+              <option value="Petit Science Center">Petit Science Center</option>
+              <option value="Student Center">Student Center</option>
+              <option value="Urban Life Building">Urban Life Building</option>
+              <option value="T Deck">T Deck</option>
+              <option value="G Deck">G Deck</option>
+              <option value="K Deck">K Deck</option>
+              <option value="N Deck">N Deck</option>
+              <option value="S Deck">S Deck</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="end-location">End Location:</label>
+            <select id="end-location" onchange="handleLocationSelect('end')">
+              <option value="">Select End Location</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="transit-type">Transit Type:</label>
+            <select id="transit-type" onchange="updateRouteOptions()">
+              <option value="walk">Walking</option>
+              <option value="bus">Bus</option>
+              <option value="marta">MARTA + Walking</option>
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button id="plan-route" class="btn" onclick="planRoute()">Plan Route</button>
+            <button id="save-route" class="btn" onclick="saveRoute()">Save Route</button>
+          </div>
+        </div>
+
+        <div id="route-results" class="route-results">
+          <div class="results-container">
+            <div id="route-map" class="route-page active">
+              <div id="map-container"></div>
+            </div>
+            <div id="route-details" class="route-page">
+              <div id="route-summary"></div>
+              <div id="route-instructions"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html> 

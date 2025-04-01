@@ -76,6 +76,10 @@ body {
     padding: 20px;
 }
 
+.route-page .center-container {
+    max-width: 800px;
+}
+
 .logo {
     width: 100%;
     max-width: 350px;
@@ -107,25 +111,25 @@ body {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-  }
+}
 
-  .schedule-table th,
-  .schedule-table td {
+.schedule-table th,
+.schedule-table td {
     border: 1px solid #ccc;
     padding: 8px 12px;
     text-align: center;
-  }
+}
 
-  .schedule-table th {
+.schedule-table th {
     background-color: #0A2472;
     color: #fff;
     text-transform: uppercase;
     font-size: 14px;
-  }
+}
 
-  .schedule-table tr:nth-child(even) {
+.schedule-table tr:nth-child(even) {
     background-color: #f9f9f9;
-  }
+}
 
 /* Mobile styles */
 @media (max-width: 768px) {
@@ -149,21 +153,20 @@ body {
     }
 }
 
-
 .train-schedule-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 40px 20px;
     width: 100%;
-  }
+}
 
-  .train-schedule-wrapper h1 {
+.train-schedule-wrapper h1 {
     font-size: 2rem;
     color: #0A2472;
     margin-bottom: 20px;
     text-align: center;
-  }
+}
 
 /* Override existing .main-content for this page */
 .train-schedule-page .main-content {
@@ -181,4 +184,203 @@ body {
     top: 10px;
     font-size: 32px;
     display: none;
+}
+
+.route-form {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+.route-form h2 {
+    color: #003875;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.route-results {
+    display: none;
+    width: 100%;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-results.visible {
+    display: block;
+}
+
+.route-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.route-section {
+    width: 100%;
+}
+
+.route-section h3 {
+    color: #003875;
+    margin-bottom: 1rem;
+}
+
+#map-container {
+    width: 100%;
+    height: 400px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+
+#route-instructions {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+#route-summary {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #e9ecef;
+    border-radius: 5px;
+}
+
+.step-distance {
+    color: #666;
+    font-size: 0.9rem;
+    margin-left: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .route-content {
+        flex-direction: row;
+    }
+    
+    .route-section {
+        width: 50%;
+    }
+}
+
+.back-button {
+    align-self: flex-start;
+    margin-bottom: 10px;
+    color: #0a2472;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #f0f0f0;
+    transform: translateX(-3px);
+}
+
+.saved-routes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.saved-route-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.route-header h3 {
+    color: #003875;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.route-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    background-color: #003875;
+    color: white;
+}
+
+.btn-small:hover {
+    background-color: #002855;
+}
+
+.btn-small.delete {
+    background-color: #dc3545;
+}
+
+.btn-small.delete:hover {
+    background-color: #c82333;
+}
+
+.route-details {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.route-details p {
+    margin: 0;
+    color: #333;
+}
+
+.route-details strong {
+    color: #003875;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.button-group .btn {
+    flex: 1;
+    max-width: 200px;
 }
