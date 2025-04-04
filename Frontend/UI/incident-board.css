@@ -1,0 +1,145 @@
+:root {
+    --primary: #003c8f;
+    --secondary: #2358b5;
+    --accent: #62c1e8;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --danger: #dc3545;
+    --success: #28a745;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(135deg, rgba(98, 193, 232, 0.1), rgba(35, 88, 181, 0.8)), url('./images/incident_bg.jpg') center/cover no-repeat;
+    min-height: 100vh;
+    padding: 100px 20px 40px; /* space for header */
+  }
+  
+  .container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 60, 143, 0.15);
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto; /* center the container */
+    padding: 30px 20px;
+  }
+  
+  .container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+  
+  h1 {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .report {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  
+  .report p {
+    margin-bottom: 8px;
+  }
+  
+  .report button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--accent);
+    color: white;
+    cursor: pointer;
+  }
+  
+  .report button:hover {
+    background-color: var(--primary);
+  }
+  
+  .header {
+    width: 90%;
+    max-width: 1200px;
+    height: 70px;
+    background-color: #002f6c;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    transform: translateX(-50%);
+  }
+  
+  .logo {
+    width: 60px;
+    height: auto;
+    margin-right: auto;
+    margin-left: 20px;
+  }
+  
+  #home-btn {
+    color:#ffffff;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+    font-size: 24px;
+  }
+  
+  /* Mobile Tweaks */
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 22px;
+    }
+  
+    .report {
+      font-size: 15px;
+    }
+  
+    .report button {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+  
+    .container {
+      padding: 20px 15px;
+    }
+  
+    .logo {
+      width: 50px;
+    }
+  
+    #home-btn {
+      font-size: 20px;
+    }
+  }
+  

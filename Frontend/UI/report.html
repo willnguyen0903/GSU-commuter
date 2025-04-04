@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Report Incident - Panther-Path</title>
+  <link rel="icon" href="images/logo.png" type="image/x-icon"/>
+  <link rel="stylesheet" href="report.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="header">
+    <a href="index.html">
+      <img src="images/logo.png" alt="Logo" class="logo" />
+    </a>
+    <a href="index.html">
+      <i class="fa-solid fa-house" id="home-btn"></i>
+    </a>
+  </div>
+  
+  <div class="container">
+    <h1>REPORT AN INCIDENT</h1>
+    <form class="form" id="incidentForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" placeholder="Where did the incident occur?" required>
+
+      <label for="description">Incident details</label>
+      <textarea id="description" name="description" rows="4" required></textarea>
+
+      <button type="submit" class="btn">Submit Report</button>
+
+      <p class="signup-link"><a href="incident-board.html">View All Reports</a></p>
+    </form>
+
+    <p id="login-message" style="display:none; color: red;">Please log in to post an incident.</p>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    if (!token) {
+        alert("Please log in to access this page.");
+        window.location.href = "login.html"; // or index.html
+    }
+    console.log(token);
+
+    document.getElementById('incidentForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const location = document.getElementById('location').value;
+      const description = document.getElementById('description').value;
+
+      try {
+        const response = await fetch('https://gsu-commuter.onrender.com/report-incident', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, location, description })
+        });
+
+        const data = await response.json();
+        document.getElementById('message').innerText = data.message;
+
+        if (response.ok) {
+          document.getElementById('incidentForm').reset();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('message').innerText = "Failed to report incident.";
+      }
+    });
+
+  </script>
+
+</body>
+</html>
