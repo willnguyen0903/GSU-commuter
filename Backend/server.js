@@ -191,20 +191,25 @@ app.post('/login', async (req, res) => {
 // JWT Middleware for Protected Routes
 const authenticateToken = (req, res, next) => {
   const authHeader = req.header('Authorization');
+  console.log("Received auth header:", authHeader);
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(403).json({ message: "Access denied. No token provided." });
   }
+
   const token = authHeader.split(' ')[1];
 
   try {
       const decoded = jwt.verify(token, JWT_SECRET);
+      console.log("Decoded Token:", decoded); // Debugging
+
       if (!decoded.userId) {
-        return res.status(400).json({ message: "Invalid token payload: missing userId" });
+          return res.status(400).json({ message: "Invalid token payload: missing userId" });
       }
 
       req.user = { userId: decoded.userId }; // Standardize to use userId everywhere
       next();
   } catch (error) {
+      console.error("JWT Verification Error:", error.message);
       return res.status(401).json({ message: "Invalid token. Try to log in!" });
   }
 };
